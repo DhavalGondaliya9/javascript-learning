@@ -193,14 +193,18 @@
                     return false;
                 }
                 cart(items[i]);
+
                 items[i].quantity = items[i].quantity - 1;
-                // addCart[$i] = items[$i];
-                // addCart[$i].quantity = 1;
-                let newProductElement = createCartProduct(items[i]);
-                let element=document.createElement('div');
-                    element.innerHTML=newProductElement;
                 let cartBasket = document.querySelector('.cart-content');
-                cartBasket.append(element);
+                while (cartBasket.hasChildNodes()) {
+                    cartBasket.removeChild(cartBasket.firstChild)
+                }
+                for (let ii=0; ii < addCart.length; ii++) {
+                    let newProductElement = createCartProduct(addCart[ii]);
+                    let element=document.createElement('div');
+                        element.innerHTML=newProductElement;
+                        cartBasket.append(element);
+                }
                 loadContent();
                 listItems();
             }
@@ -238,7 +242,7 @@
                 </div>
                 <div class="w-32 flex justify-between">
                     <button class="px-3 py-1 rounded-md bg-gray-300 decrease">-</button>
-                    <input class="mx-2 border text-center w-8 input-quantity cart-quantity" value="1" type="number">
+                    <input class="mx-2 border text-center w-8 input-quantity cart-quantity" value="${item.quantity}" type="number">
                     <button class="px-3 py-1 rounded-md bg-gray-300 increase">+</button>
                 </div>
                 <div class="flex pl-3 font-semibold text-lg w-16 text-center" >
@@ -252,9 +256,8 @@
 function search() {
     var input = document.getElementById("searchbar");
     var filter = input.value.toUpperCase();
-    console.log(filter);
     for (let i=0; i < totalRecord; i++) {
-        if (items[i].name.toUpperCase().indexOf(filter) > -1 || items[i].price.toUpperCase().indexOf(filter) > -1) {
+        if (items[i].name.toUpperCase().indexOf(filter) > -1) {
             items[i].visible = true;
         } else {
             items[i].visible = false;
@@ -303,11 +306,16 @@ function loadContent() {
 
 function removeItem(){
     if(confirm('Are Your Sure to Remove')){
+        // console.log(this.parentElement.classList.contains('actual-price'));
+        // console.log(this.parentElement);
         this.parentElement.remove();
         loadContent();
     }
 }
 function containerClean() {
+    // for (let i=0; i < addCart.length; i++) {
+
+    // }
     document.querySelector('.cart-content').innerHTML = '';
     updateTotal();
 }
