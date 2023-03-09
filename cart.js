@@ -51,8 +51,6 @@ let items = [
   },
 ];
 let totalRecord = items.length;
-
-var item = items[Math.floor(Math.random() * items.length)];
 listItems();
 function listItems() {
   document.getElementById("items").innerHTML = "";
@@ -121,7 +119,6 @@ function listItems() {
     }
   }
   if (!itemAvailable) {
-    console.log('aasasas');
     document.getElementById("items").innerHTML =
       "<div width='100%'></div><h1 class='text-center mt-40 text-2xl'>Product Not found</h1></div>";
   }
@@ -139,8 +136,8 @@ const addItem = (i) => {
   while (cartBasket.hasChildNodes()) {
     cartBasket.removeChild(cartBasket.firstChild);
   }
-  for (let ii = 0; ii < addCart.length; ii++) {
-    let newProductElement = createCartProduct(addCart[ii]);
+  for (let j = 0; j < addCart.length; j++) {
+    let newProductElement = createCartProduct(addCart[j]);
     let element = document.createElement("div");
     element.innerHTML = newProductElement;
     cartBasket.append(element);
@@ -150,14 +147,11 @@ const addItem = (i) => {
 };
 function cart(item) {
   var isExit = false;
-  for (let i = 0; i < totalRecord; i++) {
-    if (typeof addCart[i] !== "undefined" && addCart[i].id == item.id) {
-      isExit = true;
-      addCart[i].quantity = addCart[i].quantity + 1;
-    }
+  if (addCart.find((x) => x.id === item.id)) {
+    addCart.find((x) => x.id === item.id).quantity += 1;
+    isExit = true;
   }
   if (!isExit) {
-    console.log("here");
     addCart.push({
       id: item.id,
       name: item.name,
@@ -180,15 +174,15 @@ function createCartProduct(item) {
                     <span class="ml-4 font-semibold text-sm">${item.name}</span>
                 </div>
                 <div class="w-32 flex justify-between">
-                    <button class="px-3 py-1 rounded-md bg-gray-300 decrease" data-id="${item.id}">-</button>
+                    <button class="px-3 py-1 rounded-md bg-gray-300 decrease" decrease-id="${item.id}">-</button>
                     <input class="mx-2 border text-center w-8 input-quantity cart-quantity" data-id="${item.id}" value="${item.quantity}" type="number">
-                    <button class="px-3 py-1 rounded-md bg-gray-300 increase" data-id="${item.id}">+</button>
+                    <button class="px-3 py-1 rounded-md bg-gray-300 increase" increase-id="${item.id}">+</button>
                 </div>
                 <div class="flex pl-3 font-semibold text-lg w-16 text-center" >
                     <div class="currency-sign">$</div>
                     <div class="price cart-price">${item.price}</div>
                 </div>
-                <span class="px-3 py-1 rounded-md bg-red-300 text-white cart-remove" data-id="${item.id}">x</span>
+                <span class="px-3 py-1 rounded-md bg-red-300 text-white cart-remove" remove-id="${item.id}">x</span>
             </div>
   `;
 }
@@ -196,7 +190,7 @@ function search() {
   var input = document.getElementById("searchbar");
   var filter = input.value.toUpperCase();
   for (let i = 0; i < totalRecord; i++) {
-    var text = '$'+items[i].price.toString();
+    var text = "$" + items[i].price.toString();
     if (
       items[i].name.toUpperCase().indexOf(filter) > -1 ||
       text.toUpperCase().indexOf(filter) > -1
@@ -234,94 +228,86 @@ function loadContent() {
 
 function changeQty() {
   var id = this.getAttribute("data-id");
-  var value = this.value;
+  var v = this.value;
 
-  if (isNaN(value) || value < 1) {
+  if (isNaN(v) || v < 1) {
     this.parentElement.parentElement.remove();
     quantityUpdate(id);
     loadContent();
     listItems();
     return;
   }
-  for (let i = 0; i < addCart.length; i++) {
-    if (addCart[i].id == id) {
-      for (let j = 0; j < items.length; j++) {
-        if (items[j].id == id) {
-          if (addCart[i].quantity != value) {
-            var totalQuantity = addCart[i].quantity + items[j].quantity;
-            var plus =
-              value > addCart[i].quantity ? value - addCart[i].quantity : false;
-            var minus =
-              value < addCart[i].quantity ? addCart[i].quantity - value : false;
+
+  addCart.find((cartValue, i) => {
+    if (cartValue.id == id) {
+      items.find((itemValue, j) => {
+        if (itemValue.id == id) {
+          if (cartValue.quantity != v) {
+            var totalQuantity = cartValue.quantity + itemValue.quantity;
+            var plus = v > cartValue.quantity ? v - cartValue.quantity : false;
+            var minus = v < cartValue.quantity ? cartValue.quantity - v : false;
             if (plus) {
-              if (totalQuantity < addCart[i].quantity + plus) {
-                alert("This product only " + totalQuantity + " quantity available");
-                this.value = addCart[i].quantity;
+              if (totalQuantity < cartValue.quantity + plus) {
+                alert(
+                  "This product only " + totalQuantity + " quantity available"
+                );
+                this.value = cartValue.quantity;
                 return false;
               }
-              addCart[i].quantity += plus;
-              items[j].quantity -= plus;
+              cartValue.quantity += plus;
+              itemValue.quantity -= plus;
             }
             if (minus) {
-              addCart[i].quantity -= minus;
-              items[j].quantity += minus;
+              cartValue.quantity -= minus;
+              itemValue.quantity += minus;
             }
-
           }
         }
-      }
+      });
     }
-  }
+  });
   loadContent();
   listItems();
 }
 
 function increaseQty() {
-  var id = this.getAttribute("data-id");
-  for (let i = 0; i < addCart.length; i++) {
-    if (addCart[i].id == id) {
-      for (let j = 0; j < items.length; j++) {
-        if (items[j].id == id) {
-          if (items[j].quantity == 0) {
-            alert("sold out");
-            return false;
-          }
-          this.parentElement.children[1].value =
-            parseInt(this.parentElement.children[1].value) + 1;
-          addCart[i].quantity += 1;
-          items[j].quantity -= 1;
-        }
+  var id = this.getAttribute("increase-id");
+  addCart.find((value, i) => {
+    if (value.id == id) {
+      if (items.find((x) => x.id == id).quantity == 0) {
+        alert("sold out");
+        return false;
       }
+      items.find((x) => x.id == id).quantity -= 1;
+      value.quantity += 1;
+      this.parentElement.children[1].value =
+        parseInt(this.parentElement.children[1].value) + 1;
     }
-  }
+  });
+
   loadContent();
   listItems();
 }
 
 function decreaseQty() {
-  var id = this.getAttribute("data-id");
-  var key = 0;
-  for (let i = 0; i < addCart.length; i++) {
-    if (addCart[i].id == id) {
-      for (let j = 0; j < items.length; j++) {
-        if (items[j].id == id) {
-          this.parentElement.children[1].value =
-            this.parentElement.children[1].value - 1;
-          addCart[i].quantity -= 1;
-          items[j].quantity += 1;
-          if (addCart[i].quantity == "0") {
-            this.parentElement.parentElement.remove();
-            addCart.splice(i, 1);
-          }
-        }
+  var id = this.getAttribute("decrease-id");
+  addCart.find((value, i) => {
+    if (value.id == id) {
+      items.find((x) => x.id == id).quantity += 1;
+      value.quantity -= 1;
+      if (value.quantity == 0) {
+        this.parentElement.parentElement.remove();
+        addCart.splice(i, 1);
       }
+      this.parentElement.children[1].value =
+        parseInt(this.parentElement.children[1].value) - 1;
     }
-  }
+  });
   loadContent();
   listItems();
 }
 function removeItem() {
-  var id = this.getAttribute("data-id");
+  var id = this.getAttribute("remove-id");
   if (addCart.length == 1) {
     if (confirm("Are Your Sure to Remove")) {
       quantityUpdate(id);
@@ -333,33 +319,21 @@ function removeItem() {
   quantityUpdate(id);
   this.parentElement.remove();
   loadContent();
-
 }
 
 function quantityUpdate(id) {
-  var key = 0;
-  for (let i = 0; i < addCart.length; i++) {
-    if (addCart[i].id == id) {
-      for (let j = 0; j < items.length; j++) {
-        if (items[j].id == id) {
-          key = i;
-          items[j].quantity += addCart[i].quantity;
-        }
-      }
+  addCart.find((value, i) => {
+    if (value.id == id) {
+      items.find((x) => x.id == id).quantity += value.quantity;
+      addCart.splice(i, 1);
     }
-  }
-
-  addCart.splice(key, 1);
+  });
   listItems();
 }
 function containerClean() {
-  for (let i = 0; i < addCart.length; i++) {
-    for (let j = 0; j < items.length; j++) {
-      if (addCart[i].id == items[j].id) {
-        items[j].quantity += addCart[i].quantity;
-      }
-    }
-  }
+  addCart.find((value, i) => {
+    items.find((x) => x.id === value.id).quantity += value.quantity;
+  });
   addCart = [];
   document.querySelector(".cart-content").innerHTML = "";
   updateTotal();
