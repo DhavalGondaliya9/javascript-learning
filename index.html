@@ -32,14 +32,14 @@
                 </div>
                 <div class="w-32 flex justify-between">
                     <button class="px-3 py-1 rounded-md bg-gray-300 decrease">-</button>
-                    <input class="mx-2 border text-center w-8 input-quantity cart-quantity" data-id="" value="" type="number">
+                    <input class="mx-2 border text-center w-8 input-quantity cart-quantity" value="" type="number">
                     <button class="px-3 py-1 rounded-md bg-gray-300 increase">+</button>
                 </div>
                 <div class="flex pl-3 font-semibold text-lg w-16 text-center" >
                     <div class="currency-sign">$</div>
                     <div class="price cart-price"></div>
                 </div>
-                <span class="px-3 py-1 rounded-md bg-red-300 text-white cart-remove" remove-id="">x</span>
+                <span class="px-3 py-1 rounded-md bg-red-300 text-white cart-remove">x</span>
             </div>
         </template>
         <template id="item-list">
@@ -71,9 +71,9 @@
                     <div class="flex flex-row justify-between items-center px-5 mt-5">
                         <div class="text-gray-800">
                             <div class="font-bold text-xl">Dhaval Retail Shop</div>
-                                <span class="text-xs">
-                                    "Aashirvad", 7-Nandhinagar, Nanavati Chowk, Rajkot-360007
-                                </span>
+                            <span class="text-xs">
+                                Axar Nagar, Street No.2, Gandhigram, Rajkot-360007
+                            </span>
                         </div>
                         <input
                         type="text"
@@ -98,7 +98,7 @@
                         <div class="font-bold text-xl">Current Order</div>
                         <div class="font-semibold">
                         <span
-                            class="px-4 py-2 rounded-md bg-red-100 text-red-500"
+                            class="px-4 py-2 rounded-md bg-red-100 text-red-500 cursor-pointer"
                             onclick="containerClean()"
                         >
                             Clear All
@@ -113,7 +113,7 @@
                         <div class="py-4 rounded-md shadow-lg">
                             <div class="px-4 flex justify-between">
                                 <span class="font-semibold text-sm">Subtotal</span>
-                                <span class="font-bold sub-total" id="subtotal">$0</span>
+                                <span class="font-bold sub-total" id="subtotal">$0.00</span>
                             </div>
                             <div class="px-4 flex justify-between">
                                 <span class="font-semibold text-sm">Discount</span>
@@ -152,6 +152,7 @@
                 </div>
             </div>
         </div>
+        <script src="item.js"></script>
         <script src="cart.js"></script>
     </body>
 </html>
