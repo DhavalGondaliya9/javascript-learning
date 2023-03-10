@@ -1,113 +1,157 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Retail Shop</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-      input::-webkit-outer-spin-button,
-      input::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-      }
-      input[type="number"] {
-        -moz-appearance: textfield;
-      }
-    </style>
-  </head>
-  <body class="bg-gray-200">
-    <div class="container mx-auto px-5 bg-white">
-      <div class="flex lg:flex-row flex-col-reverse shadow-lg">
-        <div class="w-full lg:w-3/5 min-h-screen shadow-lg">
-          <div class="flex flex-row justify-between items-center px-5 mt-5">
-            <div class="text-gray-800">
-              <div class="font-bold text-xl">Dhaval Retail Shop</div>
-              <span class="text-xs">
-                "Aashirvad", 7-Nandhinagar, Nanavati Chowk, Rajkot-360007
-              </span>
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Retail Shop</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <style>
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+        </style>
+    </head>
+    <body class="bg-gray-200">
+        <template id="page_not_found">
+            <div></div>
+            <h1 class='text-center mt-40 text-2xl'>Product Not found</h1>
+        </template>
+        <template id="cart">
+            <div class="flex flex-row justify-between items-center mb-4 cart-box">
+                <div class="flex flex-row items-center w-2/5">
+                    <input type="hidden" class="discount" value="">
+                    <input type="hidden" class="actual-price" value="">
+                    <img src="" class="w-10 h-10 object-cover rounded-md">
+                    <span class="ml-4 font-semibold text-sm product-name"></span>
+                </div>
+                <div class="w-32 flex justify-between">
+                    <button class="px-3 py-1 rounded-md bg-gray-300 decrease">-</button>
+                    <input class="mx-2 border text-center w-8 input-quantity cart-quantity" data-id="" value="" type="number">
+                    <button class="px-3 py-1 rounded-md bg-gray-300 increase">+</button>
+                </div>
+                <div class="flex pl-3 font-semibold text-lg w-16 text-center" >
+                    <div class="currency-sign">$</div>
+                    <div class="price cart-price"></div>
+                </div>
+                <span class="px-3 py-1 rounded-md bg-red-300 text-white cart-remove" remove-id="">x</span>
             </div>
-            <input
-              type="text"
-              placeholder="Search Products"
-              onkeyup="search()"
-              class="w-full h-12 px-4 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg lg:w-20 xl:transition-all xl:duration-300 xl:w-36 xl:focus:w-44 lg:h-10 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-teal-500 dark:focus:border-teal-500 focus:outline-none focus:ring focus:ring-primary dark:placeholder-gray-400 focus:ring-opacity-40"
-              id="searchbar"
-            />
-          </div>
-          <div class="grid grid-cols-3 gap-4 px-5 mt-5 overflow-y-auto h-3/4">
-            <div id="not-available" style="display: none">
-              <h5 style="width: 400px">
-                Sorry, the products has not been added yet...
-              </h5>
+        </template>
+        <template id="item-list">
+            <div class="transform hover:scale-105 transition duration-300 px-3 py-3 flex flex-col border border-gray-200 rounded-md h-32 justify-between">
+                <div>
+                    <div class="font-bold text-gray-800 item-name">
+                    </div>
+                    <span class="font-light text-sm text-gray-400">
+                        Quantity : <span class="item-quantity"></span>
+                    </span>
+                </div>
+                <div class="flex flex-row justify-between items-center">
+                    <div class="flex space-x-0 self-end font-bold text-lg text-yellow-500">
+                        <span>$</span>
+                        <span class="item-price">
+
+                        </span>
+                    </div>
+                    <div class="flex space-x-0 self-end font-bold text-lg text-red-500">
+                        <span class="item-tax"></span>
+                    </div>
+                    <img class="item-image h-14 w-14 object-cover rounded-md" alt="Product Image">
+                </div>
             </div>
-            <template>
-              <h1>Hello world</h1>
-            </template>
-            <div id="items" style="display: contents">
+        </template>
+        <div class="container mx-auto px-5 bg-white">
+            <div class="flex lg:flex-row flex-col-reverse shadow-lg">
+                <div class="w-full lg:w-3/5 min-h-screen shadow-lg">
+                    <div class="flex flex-row justify-between items-center px-5 mt-5">
+                        <div class="text-gray-800">
+                            <div class="font-bold text-xl">Dhaval Retail Shop</div>
+                                <span class="text-xs">
+                                    "Aashirvad", 7-Nandhinagar, Nanavati Chowk, Rajkot-360007
+                                </span>
+                        </div>
+                        <input
+                        type="text"
+                        placeholder="Search Products"
+                        onkeyup="search()"
+                        class="w-full h-12 px-4 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg lg:w-20 xl:transition-all xl:duration-300 xl:w-36 xl:focus:w-44 lg:h-10 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-teal-500 dark:focus:border-teal-500 focus:outline-none focus:ring focus:ring-primary dark:placeholder-gray-400 focus:ring-opacity-40"
+                        id="searchbar"
+                        />
+                    </div>
+                    <div class="grid grid-cols-3 gap-4 px-5 mt-5 overflow-y-auto h-3/4">
+                        <div id="not-available" style="display: none">
+                            <h5 style="width: 400px">
+                                Sorry, the products has not been added yet...
+                            </h5>
+                        </div>
+                    <div id="items" style="display: contents">
+                    </div>
+                    </div>
+                </div>
+                <div class="w-full lg:w-2/5">
+                    <div class="flex flex-row items-center justify-between px-5 mt-5">
+                        <div class="font-bold text-xl">Current Order</div>
+                        <div class="font-semibold">
+                        <span
+                            class="px-4 py-2 rounded-md bg-red-100 text-red-500"
+                            onclick="containerClean()"
+                        >
+                            Clear All
+                        </span>
+                        </div>
+                    </div>
+                    <div
+                        class="px-5 py-4 mt-5 overflow-y-auto h-64 cart-content"
+                        id="container">
+                    </div>
+                    <div class="px-5 mt-5">
+                        <div class="py-4 rounded-md shadow-lg">
+                            <div class="px-4 flex justify-between">
+                                <span class="font-semibold text-sm">Subtotal</span>
+                                <span class="font-bold sub-total" id="subtotal">$0</span>
+                            </div>
+                            <div class="px-4 flex justify-between">
+                                <span class="font-semibold text-sm">Discount</span>
+                                <div
+                                class="hidden opacity-25 fixed inset-0 z-40 bg-black"
+                                id="discount-modal-id-backdrop"
+                                ></div>
+                                <span class="font-bold" id="discount-price">- $0.00</span>
+                            </div>
+                            <div class="px-4 flex justify-between">
+                                <span class="font-semibold text-sm">Sales Tax</span>
+                                <span class="font-bold" id="sales-tax">+ $0.00</span>
+                            </div>
+                            <div
+                                class="border-t-2 mt-3 py-2 px-4 flex items-center justify-between"
+                            >
+                                <span class="font-semibold text-2xl">Total</span>
+                                <span class="font-bold text-2xl total-price" id="total"
+                                >$0.00</span
+                                >
+                            </div>
+                        </div>
+                    </div>
+                    <div class="px-5 mt-5">
+                        <form method="post">
+                        <div id="hidden-form"></div>
+                        <button
+                            name="submit"
+                            class="px-4 py-4 rounded-md shadow-lg text-center bg-yellow-500 text-white font-semibold"
+                            style="width: 500px"
+                        >
+                            Complete Sale
+                        </button>
+                        </form>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-        <div class="w-full lg:w-2/5">
-          <div class="flex flex-row items-center justify-between px-5 mt-5">
-            <div class="font-bold text-xl">Current Order</div>
-            <div class="font-semibold">
-              <span
-                class="px-4 py-2 rounded-md bg-red-100 text-red-500"
-                onclick="containerClean()"
-              >
-                Clear All
-              </span>
-            </div>
-          </div>
-          <div
-            class="px-5 py-4 mt-5 overflow-y-auto h-64 cart-content"
-            id="container"
-          ></div>
-          <div class="px-5 mt-5">
-            <div class="py-4 rounded-md shadow-lg">
-              <div class="px-4 flex justify-between">
-                <span class="font-semibold text-sm">Subtotal</span>
-                <span class="font-bold sub-total" id="subtotal">$0</span>
-              </div>
-              <div class="px-4 flex justify-between">
-                <span class="font-semibold text-sm">Discount</span>
-                <div
-                  class="hidden opacity-25 fixed inset-0 z-40 bg-black"
-                  id="discount-modal-id-backdrop"
-                ></div>
-                <span class="font-bold" id="discount-price">- $0.00</span>
-              </div>
-              <div class="px-4 flex justify-between">
-                <span class="font-semibold text-sm">Sales Tax</span>
-                <span class="font-bold" id="sales-tax">+ $0.00</span>
-              </div>
-              <div
-                class="border-t-2 mt-3 py-2 px-4 flex items-center justify-between"
-              >
-                <span class="font-semibold text-2xl">Total</span>
-                <span class="font-bold text-2xl total-price" id="total"
-                  >$0.00</span
-                >
-              </div>
-            </div>
-          </div>
-          <div class="px-5 mt-5">
-            <form method="post">
-              <div id="hidden-form"></div>
-              <button
-                name="submit"
-                class="px-4 py-4 rounded-md shadow-lg text-center bg-yellow-500 text-white font-semibold"
-                style="width: 500px"
-              >
-                Complete Sale
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-    <script src="cart.js"></script>
-  </body>
+        <script src="cart.js"></script>
+    </body>
 </html>
