@@ -98,7 +98,7 @@
                         <div class="font-bold text-xl">Current Order</div>
                         <div class="font-semibold">
                         <span
-                            class="px-4 py-2 rounded-md bg-red-100 text-red-500"
+                            class="px-4 py-2 rounded-md bg-red-100 text-red-500 cursor-pointer"
                             onclick="containerClean()"
                         >
                             Clear All
@@ -113,7 +113,7 @@
                         <div class="py-4 rounded-md shadow-lg">
                             <div class="px-4 flex justify-between">
                                 <span class="font-semibold text-sm">Subtotal</span>
-                                <span class="font-bold sub-total" id="subtotal">$0</span>
+                                <span class="font-bold sub-total" id="subtotal">$0.00</span>
                             </div>
                             <div class="px-4 flex justify-between">
                                 <span class="font-semibold text-sm">Discount</span>
@@ -152,6 +152,7 @@
                 </div>
             </div>
         </div>
+        <script src="item.js"></script>
         <script src="cart.js"></script>
     </body>
 </html>

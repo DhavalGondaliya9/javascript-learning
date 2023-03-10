@@ -1,55 +1,3 @@
-let items = [
-    {
-        id: 1,
-        name: "Kit Kat",
-        image: "https://picsum.photos/50/50",
-        price: 10,
-        discount: 5,
-        tax: 18,
-        quantity: 5,
-        visible: true,
-    },
-    {
-        id: 2,
-        name: "Dairy Milk",
-        image: "https://picsum.photos/50/50",
-        price: 15,
-        discount: 5,
-        tax: 18,
-        quantity: 5,
-        visible: true,
-    },
-    {
-        id: 3,
-        name: "Juice",
-        image: "https://picsum.photos/50/50",
-        price: 25,
-        discount: 5,
-        tax: 18,
-        quantity: 5,
-        visible: true,
-    },
-    {
-        id: 4,
-        name: "Waffle",
-        price: 60,
-        image: "https://picsum.photos/50/50",
-        discount: 5,
-        tax: 18,
-        quantity: 5,
-        visible: true,
-    },
-    {
-        id: 5,
-        name: "Biscuit",
-        price: 80,
-        image: "https://picsum.photos/50/50",
-        discount: 5,
-        tax: 18,
-        quantity: 5,
-        visible: true,
-    },
-];
 let totalItem = items.length;
 listItems();
 function listItems() {
@@ -117,24 +65,20 @@ const addItem = (i) => {
         let element = document.createElement("div");
         element.innerHTML = newProductElement;
         cartBasket.append(element);
+
         document.querySelectorAll(".w-10")[key].src = cart.image;
         document.querySelectorAll(".w-10")[key].alt = cart.name;
+
         document.querySelectorAll(".discount")[key].value = cart.discount;
         document.querySelectorAll(".actual-price")[key].value = cart.price;
-        document
-          .querySelectorAll(".decrease")
-          [key].setAttribute("decrease-id", cart.id);
+
+        document.querySelectorAll(".decrease")[key].setAttribute("decrease-id", cart.id);
         document.querySelectorAll(".cart-quantity")[key].value = cart.quantity;
-        document
-          .querySelectorAll(".cart-quantity")
-          [key].setAttribute("data-id", cart.id);
-        document
-          .querySelectorAll(".increase")
-          [key].setAttribute("increase-id", cart.id);
-        document
-          .querySelectorAll(".cart-remove")
-          [key].setAttribute("remove-id", cart.id);
+        document.querySelectorAll(".cart-quantity")[key].setAttribute("data-id", cart.id);
+        document.querySelectorAll(".increase")[key].setAttribute("increase-id", cart.id);
+        document.querySelectorAll(".cart-remove")[key].setAttribute("remove-id", cart.id);
         document.querySelectorAll(".cart-price")[key].text = cart.price;
+
         document.querySelectorAll(".product-name")[key].innerHTML = cart.name;
     });
     loadContent();
@@ -145,19 +89,20 @@ function createCartProduct(item) {
     var cart = document.getElementById("cart").innerHTML;
     return cart;
 }
+
 function search() {
     var input = document.getElementById("searchbar");
     var filter = input.value.toUpperCase();
-    items.forEach((item, key) => {
+    items.forEach((item) => {
         var text = "$" + item.price.toString();
+        item.visible = false;
         if (item.name.toUpperCase().indexOf(filter) > -1 || text.toUpperCase().indexOf(filter) > -1) {
             item.visible = true;
-        } else {
-            item.visible = false;
         }
     });
     listItems();
 }
+
 function loadContent() {
     let qtyElements = document.querySelectorAll(".cart-quantity");
     qtyElements.forEach((input) => {
@@ -166,17 +111,17 @@ function loadContent() {
 
     let btnRemove = document.querySelectorAll(".cart-remove");
     btnRemove.forEach((btn) => {
-      btn.addEventListener("click", removeItem);
+        btn.addEventListener("click", removeItem);
     });
 
     let increase = document.querySelectorAll(".increase");
     increase.forEach((btn) => {
-      btn.addEventListener("click", increaseQty);
+        btn.addEventListener("click", increaseQty);
     });
 
     let decrease = document.querySelectorAll(".decrease");
     decrease.forEach((btn) => {
-      btn.addEventListener("click", decreaseQty);
+        btn.addEventListener("click", decreaseQty);
     });
     updateTotal();
 }
@@ -199,22 +144,22 @@ function changeQty() {
                 if (itemValue.id == id) {
                     if (cartValue.quantity != v) {
                         var totalQuantity = cartValue.quantity + itemValue.quantity;
-                        var plus = v > cartValue.quantity ? v - cartValue.quantity : false;
-                        var minus = v < cartValue.quantity ? cartValue.quantity - v : false;
-                        if (plus) {
-                            if (totalQuantity < cartValue.quantity + plus) {
+                        var isIncrementQuantity = v > cartValue.quantity ? v - cartValue.quantity : false;
+                        var isDecrementQuantity = v < cartValue.quantity ? cartValue.quantity - v : false;
+                        if (isIncrementQuantity) {
+                            if (totalQuantity < cartValue.quantity + isIncrementQuantity) {
                               alert(
                                 "This product only " + totalQuantity + " quantity available"
                               );
                               this.value = cartValue.quantity;
                               return false;
                             }
-                            cartValue.quantity += plus;
-                            itemValue.quantity -= plus;
+                            cartValue.quantity += isIncrementQuantity;
+                            itemValue.quantity -= isIncrementQuantity;
                         }
-                        if (minus) {
-                            cartValue.quantity -= minus;
-                            itemValue.quantity += minus;
+                        if (isDecrementQuantity) {
+                            cartValue.quantity -= isDecrementQuantity;
+                            itemValue.quantity += isDecrementQuantity;
                         }
                     }
                 }
